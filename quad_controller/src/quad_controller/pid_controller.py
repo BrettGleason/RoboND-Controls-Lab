@@ -14,6 +14,7 @@ class PIDController:
         self.max_windup_ = float(max_windup)
 
         # Store relvant data
+        self.last_timestamp_ = 0.0
         self.set_point_ = 0.0
         self.error_sum_ = 0.0
         self.last_error_ = 0.0
@@ -29,6 +30,7 @@ class PIDController:
         self.ki_ = 0.0
         self.kd_ = 0.0
         self.error_sum_ = 0.0
+        self.last_timestamp_ = 0.0
         self.last_error_ = 0.0
         self.last_windup_ = 0.0
 
@@ -45,11 +47,50 @@ class PIDController:
         self.kd_ = float(kd)
 
     def setMaxWindup(self, max_windup):
-        #TODO
-        pass
+        self.max_windup_ = int(max_windup)
 
     def update(self, measured_value, timestamp):
-        #TODO
-        pass
+        delta_time = timestamp - self.last_timestamp_
+        if delta_time == 0:
+            # Delta time is zero
+            return 0
 
+        # Calculate the error
+        error = self.set_point_ - measured_value
 
+        # Set the last timestamp_
+        self.last_timestamp_ = timestamp
+
+        # Sum the errors
+        self.error_sum_ += error * delta_time
+
+        # Find delta_error
+        delta_error = error = self.last_error_
+
+        # Update the past error
+        self.last_error_ = error
+
+        # Address max windup
+        if self.error_sum_ > self.max_windup_:
+            self.error_sum_ = self.max_windup_
+        elif self.error_sum_ < -self.max_windup_:
+            self.error_sum_ = -self.max_windup_
+
+        # Proportional error
+        p = self.kp_ * error
+        
+        # Integral error
+        i = self.ki_ * self.error_sum_
+
+        # Derivative error
+        d = self.kd_ * (delta_error / delta_time)
+
+        # Set the control effort
+        u = p + i + d
+
+        # Control effort history
+        self.u_p.append(p)
+        self.u_i.append(i)
+        self.u_d.append(d)
+        
+        return u
