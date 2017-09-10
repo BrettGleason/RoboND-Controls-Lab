@@ -6,11 +6,31 @@
 
 class PIDController:
     def __init__(self, kp = 0.0, ki = 0.0, kd = 0.0, max_windup = 10):
-        #TODO
-        pass
+        self.kp_ = float(kp)
+        self.ki_ = float(ki)
+        self.kd_ = float(kd)
+
+        # Set max windup
+        self.max_windup_ = float(max_windup)
+
+        # Store relvant data
+        self.set_point_ = 0.0
+        self.error_sum_ = 0.0
+        self.last_error_ = 0.0
+
+        # Control effort history
+        self.u_p = [0]
+        self.u_i = [0]
+        self.u_d = [0]
+
     def reset(self):
-        #TODO
-        pass
+        self.set_point_ = 0.0
+        self.kp_ = 0.0
+        self.ki_ = 0.0
+        self.kd_ = 0.0
+        self.error_sum_ = 0.0
+        self.last_error_ = 0.0
+        self.last_windup_ = 0.0
 
     def setTarget(self, target):
         #TODO
