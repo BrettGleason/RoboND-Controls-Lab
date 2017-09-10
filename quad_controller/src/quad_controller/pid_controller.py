@@ -33,20 +33,16 @@ class PIDController:
         self.last_windup_ = 0.0
 
     def setTarget(self, target):
-        #TODO
-        pass
+        self.set_point_ = float(target)
 
     def setKP(self, kp):
-        #TODO
-        pass
+        self.kp_ = float(kp)
 
     def setKI(self, ki):
-        #TODO
-        pass
+        self.ki_ = float(ki)
 
     def setKD(self, kd):
-        #TODO
-        pass
+        self.kd_ = float(kd)
 
     def setMaxWindup(self, max_windup):
         #TODO
